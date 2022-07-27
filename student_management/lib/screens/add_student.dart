@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_management/db/functions/db_functions.dart';
@@ -17,7 +18,7 @@ class AddStudentScreen extends StatefulWidget {
 
 class _AddStudentScreenState extends State<AddStudentScreen> {
   File? _image;
-  String? _imageData;
+  late String _imageData;
   ListValues data = ListValues();
   GlobalKey<FormState> formKey = GlobalKey();
   @override
@@ -52,7 +53,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                         image: FileImage(_image!),
                         pickMedia: InkWell(
                             child: const Icon(
-                              Icons.camera_alt_rounded,
+                              Icons.photo_library_rounded,
                               color: Colors.white,
                               size: 20,
                             ),
@@ -64,7 +65,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                         image: const AssetImage('assets/images/dp_default.png'),
                         pickMedia: InkWell(
                             child: const Icon(
-                              Icons.camera_alt_rounded,
+                              Icons.photo_library_rounded,
                               color: Colors.white,
                               size: 20,
                             ),
@@ -134,21 +135,55 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   }
 
   void onAddStudentButtonClicked() {
-    final student = StudentModel(
-      name: data.controller[0].text.trim(),
-      rollNo: data.controller[4].text.trim(),
-      place: data.controller[3].text.trim(),
-      age: data.controller[1].text.trim(),
-      guardian: data.controller[2].text.trim(),
-      image: _imageData,
-    );
-    addStudent(student);
-    clearField();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ScreenHome(),
-      ),
-    );
+    if (_image == null) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return CupertinoAlertDialog(
+              title: const Text(
+                'Warning!',
+                style: TextStyle(color: Colors.red),
+              ),
+              content: const Text(
+                  'You did not pick a image, Please choose a image from gallery.'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      pickMedia();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Select Image'))
+              ],
+            );
+          });
+    } else {
+      final student = StudentModel(
+        name: data.controller[0].text.trim(),
+        rollNo: data.controller[1].text.trim(),
+        place: data.controller[2].text.trim(),
+        age: data.controller[3].text.trim(),
+        guardian: data.controller[4].text.trim(),
+        image: _imageData,
+      );
+      addStudent(student);
+      getAllStudents();
+      clearField();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ScreenHome(),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.teal[100],
+          content: const Text(
+            "You Added a  student",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }

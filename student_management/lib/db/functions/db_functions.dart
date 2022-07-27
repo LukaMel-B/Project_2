@@ -8,12 +8,11 @@ ValueNotifier<List<StudentModel>> studentListNotifier = ValueNotifier([]);
 Future<void> addStudent(StudentModel value) async {
   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
   final id = await studentDB.add(value);
-  print(studentDB.values);
   value.id = id;
   studentListNotifier.value.add(value);
   await studentDB.put(id, value);
   studentListNotifier.notifyListeners();
-  print(value.name);
+  getAllStudents();
 }
 
 Future<void> getAllStudents() async {
@@ -29,9 +28,26 @@ Future<void> clearAllStudents() async {
   studentDB.clear();
 }
 
-Future<void> deleteStudent(StudentModel db, int index, int id) async {
+Future<void> deleteStudent(StudentModel db, int id) async {
   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
-  //studentDB.putAt(index, db);
   studentDB.delete(id);
   getAllStudents();
 }
+
+Future<void> editStudent(StudentModel studentData, int id) async {
+  final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
+  studentDB.put(id, studentData);
+  getAllStudents();
+}
+
+// Future getStudentDetails(String query) async {
+//   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
+//   final student = studentListNotifier.value.where((element) {
+//     final titleLower = element.name.toLowerCase();
+//     final search = query.toLowerCase();
+//     return titleLower.contains(search);
+//   });
+//   final studentData = StudentModel(image: student., rollNo: rollNo, name: name, age: age, guardian: guardian, place: place)
+//   studentListNotifier.value.clear();
+//   studentListNotifier.value.add(student);
+// }

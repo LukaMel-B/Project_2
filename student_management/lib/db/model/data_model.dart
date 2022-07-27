@@ -16,7 +16,7 @@ class StudentModel {
   final String rollNo;
 
   @HiveField(6)
-  String? image;
+  final String image;
 
   @HiveField(5)
   final String guardian;
@@ -26,7 +26,7 @@ class StudentModel {
 
   StudentModel(
       {this.id,
-      this.image,
+      required this.image,
       required this.rollNo,
       required this.name,
       required this.age,
