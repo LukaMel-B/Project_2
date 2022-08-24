@@ -75,147 +75,135 @@ class _StudentListState extends State<StudentList> {
                                   final data = (query.isEmpty)
                                       ? studentList[index]
                                       : studentSearchList[index];
-                                  return ListTile(
-                                    //subtitle: Text(data.id.toString()),
-                                    title: Text(
-                                      data.name,
-                                    ),
-                                    subtitle: Text("Roll No: ${data.rollNo}"),
-                                    leading: Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        image: DecorationImage(
-                                          image: FileImage(
-                                            File(data.image),
+                                  return InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return CupertinoAlertDialog(
+                                              title: Text(data.name),
+                                              content: const Text(
+                                                  'Choose from below actions to perform on the student'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return CupertinoAlertDialog(
+                                                          title: const Text(
+                                                              'Delete Student!'),
+                                                          content: const Text(
+                                                              'Do you confirm that you want to delete the student from list?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      'Cancel'),
+                                                              child: const Text(
+                                                                  'Cancel'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                                deleteStudent(
+                                                                    data.id!);
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        SnackBar(
+                                                                  backgroundColor:
+                                                                      Colors.teal[
+                                                                          100],
+                                                                  content: Text(
+                                                                    "You deleted student '${data.name}'",
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  duration:
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                ));
+                                                              },
+                                                              child: const Text(
+                                                                'Delete',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .red),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: const Text('Delete'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            StudentDetails(
+                                                          id: data.id!,
+                                                          age: data.age,
+                                                          img: data.image,
+                                                          guardian:
+                                                              data.guardian,
+                                                          name: data.name,
+                                                          place: data.place,
+                                                          rollNo: data.rollNo,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: const Text(
+                                                      'Show Details'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'Cancel'),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: ListTile(
+                                        //subtitle: Text(data.id.toString()),
+                                        title: Text(
+                                          data.name,
+                                        ),
+                                        subtitle:
+                                            Text("Roll No: ${data.rollNo}"),
+                                        leading: Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            image: DecorationImage(
+                                              image: FileImage(
+                                                File(data.image),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return CupertinoAlertDialog(
-                                                title: Text(data.name),
-                                                content: const Text(
-                                                    'Choose from below actions to perform on the student'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return CupertinoAlertDialog(
-                                                            title: const Text(
-                                                                'Delete Student!'),
-                                                            content: const Text(
-                                                                'Do you confirm that you want to delete the student from list?'),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    Navigator.pop(
-                                                                        context,
-                                                                        'Cancel'),
-                                                                child: const Text(
-                                                                    'Cancel'),
-                                                              ),
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                  deleteStudent(
-                                                                      StudentModel(
-                                                                          rollNo: data
-                                                                              .rollNo,
-                                                                          name: data
-                                                                              .name,
-                                                                          age: data
-                                                                              .age,
-                                                                          guardian: data
-                                                                              .guardian,
-                                                                          place: data
-                                                                              .place,
-                                                                          image:
-                                                                              data.image),
-                                                                      data.id!);
-                                                                  ScaffoldMessenger.of(
-                                                                          context)
-                                                                      .showSnackBar(
-                                                                          SnackBar(
-                                                                    backgroundColor:
-                                                                        Colors.teal[
-                                                                            100],
-                                                                    content:
-                                                                        Text(
-                                                                      "You deleted student '${data.name}'",
-                                                                      style: const TextStyle(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                    duration: const Duration(
-                                                                        seconds:
-                                                                            2),
-                                                                  ));
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                  'Delete',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .red),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                    child: const Text('Delete'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              StudentDetails(
-                                                            id: data.id!,
-                                                            age: data.age,
-                                                            img: data.image,
-                                                            guardian:
-                                                                data.guardian,
-                                                            name: data.name,
-                                                            place: data.place,
-                                                            rollNo: data.rollNo,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: const Text(
-                                                        'Show Details'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, 'Cancel'),
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      color: Colors.black,
-                                    ),
+                                        trailing: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Colors.black,
+                                        )),
                                   );
                                 },
                                 separatorBuilder: (context, index) {

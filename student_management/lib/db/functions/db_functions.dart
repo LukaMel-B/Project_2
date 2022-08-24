@@ -9,8 +9,8 @@ Future<void> addStudent(StudentModel value) async {
   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
   final id = await studentDB.add(value);
   value.id = id;
-  studentListNotifier.value.add(value);
   await studentDB.put(id, value);
+  studentListNotifier.value.add(value);
   studentListNotifier.notifyListeners();
   getAllStudents();
 }
@@ -20,6 +20,9 @@ Future<void> getAllStudents() async {
   studentListNotifier.value.clear();
   studentListNotifier.value.addAll(studentDB.values);
   studentListNotifier.notifyListeners();
+  studentListNotifier.value.sort((a, b) {
+    return a.rollNo.toLowerCase().compareTo(b.rollNo.toLowerCase());
+  });
 }
 
 Future<void> clearAllStudents() async {
@@ -28,7 +31,7 @@ Future<void> clearAllStudents() async {
   studentDB.clear();
 }
 
-Future<void> deleteStudent(StudentModel db, int id) async {
+Future<void> deleteStudent(int id) async {
   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
   studentDB.delete(id);
   getAllStudents();
@@ -39,15 +42,3 @@ Future<void> editStudent(StudentModel studentData, int id) async {
   studentDB.put(id, studentData);
   getAllStudents();
 }
-
-// Future getStudentDetails(String query) async {
-//   final studentDB = await Hive.openBox<StudentModel>('student_dataBase');
-//   final student = studentListNotifier.value.where((element) {
-//     final titleLower = element.name.toLowerCase();
-//     final search = query.toLowerCase();
-//     return titleLower.contains(search);
-//   });
-//   final studentData = StudentModel(image: student., rollNo: rollNo, name: name, age: age, guardian: guardian, place: place)
-//   studentListNotifier.value.clear();
-//   studentListNotifier.value.add(student);
-// }

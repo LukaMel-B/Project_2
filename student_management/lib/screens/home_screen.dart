@@ -22,6 +22,7 @@ class _ScreenHomeState extends State<ScreenHome> {
 
   @override
   Widget build(BuildContext context) {
+    //clearAllStudents();
     return Scaffold(
       floatingActionButton: ElevatedButton(
         style: ElevatedButton.styleFrom(

@@ -4,7 +4,7 @@ import 'package:student_management/db/model/data_model.dart';
 import 'package:student_management/screens/home_screen.dart';
 
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(StudentModelAdapter());
   runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
